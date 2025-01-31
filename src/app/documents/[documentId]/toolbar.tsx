@@ -15,6 +15,8 @@ import {
   ListTodoIcon,
   LucideIcon,
   MessageSquarePlusIcon,
+  MinusIcon,
+  PlusIcon,
   PrinterIcon,
   Redo2Icon,
   RemoveFormattingIcon,
@@ -27,20 +29,18 @@ import {
 
 import { Button } from "@/components/ui/button";
 import {
+  Dialog,
+  DialogContent,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogFooter,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog";
 
 import { Input } from "@/components/ui/input";
 import { Separator } from "@/components/ui/separator";
@@ -50,6 +50,98 @@ import { type Level } from "@tiptap/extension-heading";
 import { useState } from "react";
 import { SketchPicker, type ColorResult } from "react-color";
 
+const FontSizeButton = () => {
+  const { editor } = useEditorStore();
+
+  const curentFontSize = editor?.getAttributes("textStyle").fontSize
+    ? editor?.getAttributes("textStyle").fontSize.replace("px", "")
+    : "16";
+
+  const [fontSize, setFontSize] = useState(curentFontSize);
+  const [inputValue, setInputValue] = useState(fontSize);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const updateFontSize = (newSize: string) => {
+    const size = parseInt(newSize);
+    if (!isNaN(size) && size >= 1 && size <= 100) {
+      editor?.chain().focus().setFontSize(`${size}px`).run();
+      setFontSize(newSize);
+      setInputValue(newSize);
+      setIsEditing(false);
+    }
+  };
+
+  const handleInputeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputValue(e.target.value);
+  };
+
+  const handleInputeBlur = () => {
+    updateFontSize(inputValue);
+  };
+
+  const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.key === "Enter") {
+      e.preventDefault();
+      updateFontSize(inputValue);
+      editor?.commands.focus();
+    }
+  };
+
+  const increment = () => {
+    const size = parseInt(fontSize);
+    if (size < 100) {
+      updateFontSize(`${size + 1}`);
+    }
+  };
+
+  const decrement = () => {
+    const size = parseInt(fontSize);
+    if (size > 1) {
+      updateFontSize(`${size - 1}`);
+    }
+  };
+
+  if (!editor) return null;
+
+  return (
+    <div className="flex items-center gap-x-0.5">
+      <button
+        onClick={decrement}
+        className="h-7 w-7 shrink-0 flex  items-center justify-center rounded-sm hover:bg-neutral-200/80"
+      >
+        <MinusIcon className="size-4" />
+      </button>
+
+      {isEditing ? (
+        <input
+          type="text"
+          value={inputValue}
+          onChange={handleInputeChange}
+          onBlur={handleInputeBlur}
+          onKeyDown={handleKeyDown}
+          className="h-7 w-10 text-sm text-center border border-neutral-400 rounded-sm bg-transparent focus:outline-none focus:ring-0"
+        />
+      ) : (
+        <button
+          onClick={() => {
+            setIsEditing(true);
+            setFontSize(curentFontSize);
+          }}
+          className="h-7 w-10 text-sm text-center border border-neutral-400 rounded-sm bg-transparent cursor-text"
+        >
+          {curentFontSize}
+        </button>
+      )}
+
+      <button
+        onClick={increment}
+        className="h-7 w-7 shrink-0 flex  items-center justify-center rounded-sm hover:bg-neutral-200/80"
+      >
+        <PlusIcon className="size-4" />
+      </button>
+    </div>
+  );
+};
 const ListButton = () => {
   const { editor } = useEditorStore();
 
@@ -498,7 +590,7 @@ export const Toolbar = () => {
       <Separator orientation="vertical" className="h-5 bg-neutral-300" />
       <HeaddingLavelButton />
       <Separator orientation="vertical" className="h-5 bg-neutral-300" />
-      {/* Todo: font size */}
+      <FontSizeButton />
       <Separator orientation="vertical" className="h-5 bg-neutral-300" />
       {section[1].map((item) => (
         <ToolbarButton key={item.label} {...item} />
