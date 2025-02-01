@@ -62,12 +62,9 @@ export const Ruler = () => {
       onMouseMove={handleMouseMove}
       onMouseUp={handleMouseUp}
       onMouseLeave={handleMouseUp}
-      className="h-6 border-b border-gray-300 flex items-end relative select-none print:hidden"
+      className="w-[816px] mx-auto h-6 border-b border-gray-300 flex items-end relative select-none print:hidden"
     >
-      <div
-        id="rular_container"
-        className="max-w-[816px] mx-auto w-full h-full relative"
-      >
+      <div id="rular_container" className="w-full h-full relative">
         <Marker
           position={leftMargine}
           isleft={true}

@@ -88,25 +88,7 @@ export const Editor = () => {
       TaskItem.configure({ nested: true }),
       TaskList,
     ],
-    content: `
-
-    <P> hellow editor</P>
-
-        <table>
-          <tbody>
-            <tr>
-              <th>Name</th>
-              <th colspan="3">Description</th>
-            </tr>
-            <tr>
-              <td>Cyndi Lauper</td>
-              <td>Singer</td>
-              <td>Songwriter</td>
-            </tr>
-              <td>Actress</td>
-          </tbody>
-        </table>
-      `,
+    content: ``,
   });
   return (
     <div className="size-full overflow-x-auto bg-[#f9fbfd] px-4 print:p-4 print:bg-white print:overflow-visible">
