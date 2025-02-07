@@ -12,6 +12,7 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "@/components/ui/alert-dialog";
+import { toast } from "sonner";
 
 import { Id } from "../../convex/_generated/dataModel";
 import { api } from "../../convex/_generated/api";
@@ -44,7 +45,10 @@ export const RemoveDailog = ({ children, documentId }: RemoveDialogProps) => {
             onClick={(e) => {
               e.stopPropagation();
               setIsRemoveing(true);
-              remove({ id: documentId }).finally(() => setIsRemoveing(false));
+              remove({ id: documentId })
+                .catch(() => toast.error("Sumething went wrong!"))
+                .then(() => toast.success("Document deleted!"))
+                .finally(() => setIsRemoveing(false));
             }}
           >
             Delete
