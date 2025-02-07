@@ -1,4 +1,6 @@
 import { LoaderIcon } from "lucide-react";
+import { DocumentRow } from "./document-row";
+
 import { PaginationStatus } from "convex/react";
 import { Doc } from "../../../convex/_generated/dataModel";
 import {
@@ -9,7 +11,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import { DocumentRow } from "./document-row";
+import { Button } from "@/components/ui/button";
 
 interface DocumentsTableProps {
   documents: Doc<"documents">[] | undefined;
@@ -35,7 +37,9 @@ export const DocumentTable = ({
                 <TableHead>Name</TableHead>
                 <TableHead>&nbsp;</TableHead>
                 <TableHead className="hidden md:table-cell">Shared</TableHead>
-                <TableHead className="hidden md:table-cell">Created at</TableHead>
+                <TableHead className="hidden md:table-cell">
+                  Created at
+                </TableHead>
               </TableRow>
             </TableHeader>
             {documents.length === 0 ? (
@@ -59,6 +63,16 @@ export const DocumentTable = ({
           </Table>
         </div>
       )}
+      <div className="flex justify-center items-center">
+        <Button
+          variant={"ghost"}
+          size={"sm"}
+          onClick={() => loadMore(10)}
+          disabled={status !== "CanLoadMore"}
+        >
+          {status == "CanLoadMore" ? "LoadMore" : "End of result"}
+        </Button>
+      </div>
     </div>
   );
 };

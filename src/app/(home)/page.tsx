@@ -10,7 +10,7 @@ const Home = () => {
   const { results, status, loadMore } = usePaginatedQuery(
     api.document.get,
     {},
-    { initialNumItems: 5 }
+    { initialNumItems: 10 }
   );
 
   return (
