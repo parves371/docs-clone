@@ -30,15 +30,14 @@ export async function POST(request: Request) {
     document.organizationId && document.organizationId === sessionClaims.org_id
   );
 
-  console.log({ isOwner, isOrganizationMember });
-
   if (!isOwner && !isOrganizationMember) {
     return new Response("Unauthorized", { status: 403 });
   }
 
   const session = liveblocks.prepareSession(user.id, {
     userInfo: {
-      name: user.firstName ?? "Anonymous",
+      name:
+        user.firstName ?? user.primaryEmailAddress?.emailAddress ?? "Anonymous",
       avatarUrl: user.imageUrl,
     },
   });
