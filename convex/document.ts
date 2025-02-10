@@ -161,7 +161,9 @@ export const getById = query({
   },
   handler: async (ctx, args) => {
     const document = await ctx.db.get(args.id);
-
+    if (!document) {
+      throw new ConvexError("Document not found");
+    }
     return document;
   },
 });
