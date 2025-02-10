@@ -1,9 +1,18 @@
 const markers = Array.from({ length: 83 }, (_, i) => i);
 import { useRef, useState } from "react";
 import { FaCaretDown } from "react-icons/fa";
+import { useMutation, useStorage } from "@liveblocks/react";
+
 export const Ruler = () => {
-  const [leftMargine, setLeftMargine] = useState(56);
-  const [rightMargine, setRightMargine] = useState(56);
+  const leftMargine = useStorage((root) => root.leftMargine) ?? 56;
+  const setLeftMargine = useMutation(({ storage }, position: number) => {
+    storage.set("leftMargine", position);
+  }, []);
+
+  const rightMargine = useStorage((root) => root.rightMargine) ?? 56;
+  const setRightMargine = useMutation(({ storage }, position: number) => {
+    storage.set("rightMargine", position);
+  }, []);
 
   const [isdragingLeft, setIsdragingLeft] = useState(false);
   const [isdragingRight, setIsdragingRight] = useState(false);
