@@ -23,13 +23,22 @@ import { useLiveblocksExtension } from "@liveblocks/react-tiptap";
 import { useEditorStore } from "@/store/use-editor-store";
 import { FontSizeExtension } from "@/extensions/font-size";
 import { LineHeightExtension } from "@/extensions/line-height";
+
 import { Ruler } from "./ruler";
 import { Threads } from "./threads";
-export const Editor = () => {
+import { LEFT_MARGIN_DEFAULT, RIGHT_MARIN_DEFAULT } from "@/constants/margin";
+
+interface EditorProps {
+  initialContent: string | undefined;
+}
+export const Editor = ({ initialContent }: EditorProps) => {
   const leftMargine = useStorage((root) => root.leftMargine);
   const rightMargine = useStorage((root) => root.rightMargine);
 
-  const liveblocks = useLiveblocksExtension();
+  const liveblocks = useLiveblocksExtension({
+    initialContent: initialContent,
+    offlineSupport_experimental: true,
+  });
   const { setEditor } = useEditorStore();
 
   const editor = useEditor({
@@ -61,7 +70,7 @@ export const Editor = () => {
 
     editorProps: {
       attributes: {
-        style: `padding-left: ${leftMargine ?? 56}px; padding-right: ${rightMargine ?? 56}px;`,
+        style: `padding-left: ${leftMargine ?? LEFT_MARGIN_DEFAULT}px; padding-right: ${rightMargine ?? RIGHT_MARIN_DEFAULT}px;`,
         class:
           "focus:outline-none print:border-0 bg-white border border-[#c7c7c7] flex flex-col min-h-[1054px] w-[816px] pt-10 pr-14 pb-10 cursor-text",
       },

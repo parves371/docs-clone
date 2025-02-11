@@ -1,0 +1,4 @@
+export const LEFT_MARGIN_DEFAULT = 56;
+export const RIGHT_MARIN_DEFAULT = 56;
+
+// 816 TODO FIND THE NUMBER
