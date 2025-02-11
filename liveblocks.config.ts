@@ -23,6 +23,7 @@ declare global {
         // Example properties, for useSelf, useUser, useOthers, etc.
         name: string;
         avatarUrl: string;
+        color: string;
       };
     };
 
