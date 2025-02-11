@@ -17,6 +17,7 @@ type User = {
   id: string;
   name: string;
   avatarUrl: string;
+  color: string;
 };
 export function Room({ children }: { children: ReactNode }) {
   const param = useParams();
@@ -62,7 +63,6 @@ export function Room({ children }: { children: ReactNode }) {
             user.name.toLowerCase().includes(text.toLowerCase())
           );
         }
-        console.log(filterUsers);
 
         return filterUsers.map((user) => user.id); // Return only the user IDs
       }}
