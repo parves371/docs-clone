@@ -27,7 +27,7 @@ import {
   TextIcon,
   TrashIcon,
   UnderlineIcon,
-  Undo2Icon
+  Undo2Icon,
 } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
@@ -40,13 +40,32 @@ import { Doc } from "../../../../convex/_generated/dataModel";
 import { Avatars } from "./avatre";
 import { DocumentInput } from "./document-input";
 import { Inbox } from "./inbox";
+import { api } from "../../../../convex/_generated/api";
+import { useMutation } from "convex/react";
+import { useRouter } from "next/navigation";
+import { toast } from "sonner";
+import { RemoveDailog } from "@/components/remove-dialog";
+import { RenameDailog } from "@/components/rename-dialog";
 
 interface NavbarProps {
   data: Doc<"documents">;
 }
 
 export const Navbar = ({ data }: NavbarProps) => {
+  const router = useRouter();
   const { editor } = useEditorStore();
+  const mutation = useMutation(api.document.create);
+
+  const onNewDocument = () => {
+    mutation({ title: "Untitled", initialContent: "" })
+      .catch((err) => {
+        toast.error("Error creating new document");
+      })
+      .then((id) => {
+        toast.success("New document created!");
+        router.push(`/documents/${id}`);
+      });
+  };
 
   const insertTable = ({ rows, cols }: { rows: number; cols: number }) => {
     editor
@@ -71,7 +90,7 @@ export const Navbar = ({ data }: NavbarProps) => {
     const blob = new Blob([JSON.stringify(content)], {
       type: "application/json",
     });
-    onDownload(blob, `${data.title}.json`); 
+    onDownload(blob, `${data.title}.json`);
   };
 
   const onSaveHtml = () => {
@@ -131,23 +150,30 @@ export const Navbar = ({ data }: NavbarProps) => {
                       </MenubarItem>
                     </MenubarSubContent>
                   </MenubarSub>
-                  <MenubarItem>
+                  <MenubarItem onClick={onNewDocument}>
                     <FilePlusIcon className="size-4 mr-2" />
                     New Document
                   </MenubarItem>
 
                   <MenubarSeparator />
-
-                  <MenubarItem>
-                    <FilePenIcon className="size-4 mr-2" />
-                    Rename
-                  </MenubarItem>
-
-                  <MenubarItem>
-                    <TrashIcon className="size-4 mr-2" />
-                    Rename
-                  </MenubarItem>
-
+                  <RenameDailog documentId={data._id} insialTitle={data.title}>
+                    <MenubarItem
+                      onClick={(e) => e.stopPropagation()}
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <FilePenIcon className="size-4 mr-2" />
+                      Rename
+                    </MenubarItem>
+                  </RenameDailog>
+                  <RemoveDailog documentId={data._id}>
+                    <MenubarItem
+                      onClick={(e) => e.stopPropagation()}
+                      onSelect={(e) => e.preventDefault()}
+                    >
+                      <TrashIcon className="size-4 mr-2" />
+                      Remove
+                    </MenubarItem>
+                  </RemoveDailog>
                   <MenubarSeparator />
 
                   <MenubarItem onClick={() => window.print()}>
